@@ -129,6 +129,7 @@ d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/
     });
 // adding techtonic data to the map
 tectonicPlates.addTo(myMap)
+// legend
 
 // overlay
 let overlays = {
