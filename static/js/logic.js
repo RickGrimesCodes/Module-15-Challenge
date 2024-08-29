@@ -71,8 +71,8 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geo
 
         // making a rough determination of radius by using magnitude to determine the radius of data points (What I just wrote makes 100% perfect sense)
         function radiusSize(mag){
-            if (mag == 0) // this makes points still appear even if they are a zero, because zero times anything is zero
-                return .5;
+            if (mag <= .5) // this makes points still appear even if they are a zero, because zero times anything is zero
+                return 1 * 5;
             else
                 return mag * 5;
         }
@@ -99,6 +99,14 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geo
             },
             // style for points
             style: dataStyle,
+
+            // cursor click info
+            onEachFeature: function(feature, layer) {
+                layer.bindPopup(`Magnitude: <b>${feature.properties.mag}</b><br>
+                                Latitude: <b>${feature.geometry.coordinates[1]}</b><br>
+                                Longitude: <b>${feature.geometry.coordinates[0]}</b><br>
+                                Depth: <b>${feature.geometry.coordinates[2]} Km</b>`);
+            }
 
         }).addTo(earthquakes)
     },
@@ -127,14 +135,37 @@ d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/
 
         }).addTo(tectonicPlates);
     });
-// adding techtonic data to the map
-tectonicPlates.addTo(myMap)
-// legend
 
+// Final additions
+
+// adding tectonic data to the map
+tectonicPlates.addTo(myMap)
+
+// legend
+let legend = L.control({
+    position: "bottomright"
+});
+legend.onAdd = function(){
+    let div = L.DomUtil.create('div', 'info legend');
+    let intervals = [-10,10,30,50,70,90];
+    let colors = ["#a0f31d", "#d8f11d", "#f4d821",
+        "#fab52f", "#f9a15d","#fd5e63"];
+
+    for(var i = 0; i < intervals.length; i++) {
+        div.innerHTML += "<i style='background':"
+            + colors[i]
+            + "'></i>"
+            + intervals[i]
+            + (intervals[i + 1] ? "km - " + intervals[i+1] + "km<br>" : "+");
+    return div;
+    }
+}
+legend.addTo(myMap)
 // overlay
 let overlays = {
     "Tectonic Plates": tectonicPlates,
     "Earthquakes Past 30 Days": earthquakes,
+
 }
 
 // Layer control
