@@ -147,20 +147,17 @@ let legend = L.control({
 });
 legend.onAdd = function(){
     let div = L.DomUtil.create('div', 'info legend');
-    let intervals = [-10,10,30,50,70,90];
+    let intervals = [-10, 10, 30, 50, 70, 90];
     let colors = ["#a0f31d", "#d8f11d", "#f4d821",
-        "#fab52f", "#f9a15d","#fd5e63"];
-
-    for(var i = 0; i < intervals.length; i++) {
-        div.innerHTML += "<i style='background':"
-            + colors[i]
-            + "'></i>"
+        "#fab52f", "#f9a15d", "#fd5e63"];
+    for (var i = 0; i < intervals.length; i++) {
+        div.innerHTML += "<ul><li style='background-color:" + colors[i] + "'></li></ul>"
             + intervals[i]
-            + (intervals[i + 1] ? "km - " + intervals[i+1] + "km<br>" : "+");
-    return div;
+            + (intervals[i + 1] ? "Km - " + intervals[i + 1] + "Km<br>" : "+Km");
     }
+    return div;
 }
-legend.addTo(myMap)
+legend.addTo(myMap);
 // overlay
 let overlays = {
     "Tectonic Plates": tectonicPlates,
